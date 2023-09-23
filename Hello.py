@@ -4,8 +4,9 @@ import numpy as np
 import pandas as pd
 import random
 import altair as alt
-import plotly as plot
-import plotly.express as px
+#import plotly
+import plotly.graph_objects as go
+#import plotly.express as px
 
 import streamlit as st
 from streamlit.logger import get_logger
@@ -50,14 +51,15 @@ def run():
     st.altair_chart(chart, use_container_width=False, theme="streamlit")
 
 
-    fig = px.treemap(df)
-    #                     path=[px.Constant("world"), 'continent', 'country'], values='pop',
-    #                  color='lifeExp', hover_data=['iso_alpha'],
-    #                  color_continuous_scale='RdBu',
-    #                  color_continuous_midpoint=np.average(df['lifeExp'], weights=df['pop']))
-    # fig.update_layout(margin = dict(t=50, l=25, r=25, b=25))
+    fig = go.Figure(go.Treemap(
+        labels=["Eve", "Cain", "Seth", "Enos", "Noam", "Abel", "Awan", "Enoch",
+            "Azura"],
+        parents=["", "Eve", "Eve", "Seth", "Seth", "Eve", "Eve", "Awan", "Eve"]
+    ))
 
     st.plotly_chart(fig)
+
+
 
 
 if __name__ == "__main__":
