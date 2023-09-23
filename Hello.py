@@ -3,6 +3,9 @@ from urllib.error import URLError
 import numpy as np
 import pandas as pd
 import random
+import altair as alt
+import plotly as plot
+import plotly.express as px
 
 import streamlit as st
 from streamlit.logger import get_logger
@@ -20,30 +23,41 @@ def run():
 
     capability = ["client", "connectivity","trading","middle_office","settlements"]
 
+    s=10
     c = []     
-    for i in range(50):
+
+    for i in range(s):
         c.append(random.choice(capability))
 
-    data = {'P1': rng.integers(low=0, high=1000000, size=50),
-            'P2': rng.integers(low=0, high=100, size=50),
+    data = {'P': rng.integers(low=0, high=1000000, size=s),
+            'D': rng.integers(low=0, high=2, size=s),
             'C' : c
     }
 
     df = pd.DataFrame(data)
-      
-    st.write(df)
 
-    st.write("# Welcome to Streamlit! Vince  👋")
+    cap_select = st.selectbox("select capabilities", capability)
 
-    #st.sidebar.success("Select a demo above.")
+    df2 = df[ df['C'] == cap_select ]
 
-    st.markdown(
-        """
-        Streamlit is an open-source app framework built specifically for
-        Machine Learning and Data Science projects.
-        - Explore a [New York City rideshare dataset](https://github.com/streamlit/demo-uber-nyc-pickups)
-    """
+    st.dataframe(df2)
+
+    chart = alt.Chart(df).mark_bar().encode(
+        x='D',
+        y='P',
+        color='C'
     )
+    st.altair_chart(chart, use_container_width=False, theme="streamlit")
+
+
+    fig = px.treemap(df)
+    #                     path=[px.Constant("world"), 'continent', 'country'], values='pop',
+    #                  color='lifeExp', hover_data=['iso_alpha'],
+    #                  color_continuous_scale='RdBu',
+    #                  color_continuous_midpoint=np.average(df['lifeExp'], weights=df['pop']))
+    # fig.update_layout(margin = dict(t=50, l=25, r=25, b=25))
+
+    st.plotly_chart(fig)
 
 
 if __name__ == "__main__":
